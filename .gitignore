@@ -1,2 +1,3 @@
 *.swp
-programoutput
+*programoutput*
+.DS_S*
