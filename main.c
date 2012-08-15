@@ -7,19 +7,46 @@ void setpixel(int x, int y, int color){
   unsigned int *pixels = (unsigned int*) screen->pixels;
   int lineoffset = y * screen->w;
 
-  pixels[x + lineoffset] = ((x&y)<<8) | color;
+//  pixels[x + lineoffset] = ((x&y)<<8) | color;
+  pixels[x+lineoffset] = color;
 }
 
 
+void drawscreen(int rand, void (*funcPointer) (int, int, int)){
+  int y, x;
+  for(y = 0; y < screen->h; y++) {
+	for (x=0; x < screen->w; x++) {
+	  (*funcPointer)(x,y,rand);
+//setpixel(x,y,color + (rand << 8));
+	}
+  }
+}
+
+void draw1 (int x, int y, int rand){
+  int color = 0xff000000;
+  color = color + (rand << 8);
+  color = ((x&y)<<8) | color;
+  setpixel(x,y, color);
+}
+
+void draw2(int x, int y, int rand){
+  int color = 0x00ff0000;
+  color = color + (rand << 8);
+  color = ((x^y)<<8) ^ color;
+  setpixel(x,y, color);
+}
+
 int main(int argc, char* argv[])
 {
+
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0 ) return 1;
 
-    screen = SDL_SetVideoMode(1024, 768, 32, SDL_FULLSCREEN);
+    screen = SDL_SetVideoMode(1024, 768, 32, SDL_SWSURFACE);
 	SDL_Event event;
 
 	int count;
 	int exit = 0;
+	void (*funcPointer)(int, int, int) = &draw1;
 
 	while(!exit){
 	  count++;
@@ -33,23 +60,25 @@ int main(int argc, char* argv[])
 			switch(event.key.keysym.sym) {
 			  case SDLK_ESCAPE:
 			  case SDLK_q:
-				exit =1;
+				exit = 1;
 				break;
+			  case SDLK_UP:
+				funcPointer = &draw1;
+				break;
+			  case SDLK_DOWN:
+				funcPointer = &draw2;
+				break;
+
 			}
 		  break;
 		}
 	  }
 
-	  int y, x, ytimesw;
-
-	  for(y = 0; y < screen->h; y++) {
-		for (x=0; x < screen->w; x++) {
-		  setpixel(x,y, 0xFF000000 + (count << 8));
-		}
-	  }
-
+	  drawscreen(count, funcPointer);
 	  SDL_Flip(screen);
 	}
 
     return 0;
 }
+
+
