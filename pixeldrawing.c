@@ -32,13 +32,26 @@ void draw1 (int x, int y, int rand){
 void draw2(int x, int y, int rand){
   int color = 0x00ff0000;
   color = color + (rand << 8);
-  color = ((x^y)<<8) ^ color;
+  color = ((x^y)<<8) & color;
+  setpixel(x,y, color);
+}
+
+void draw3(int x, int y, int rand){
+  int color = 0xffffff;
+  color = color + (rand << 24);
+  color = ((x&y)<<24) & color;
+  setpixel(x,y, color);
+}
+
+void draw4(int x, int y, int rand){
+  int color = 0x00000000;
+  color = color + (rand << 16);
+  color = ((x^y)<< 16) ^ color;
   setpixel(x,y, color);
 }
 
 int main(int argc, char* argv[])
 {
-
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0 ) return 1;
 
     screen = SDL_SetVideoMode(1024, 768, 32, SDL_SWSURFACE);
@@ -68,7 +81,12 @@ int main(int argc, char* argv[])
 			  case SDLK_DOWN:
 				funcPointer = &draw2;
 				break;
-
+			  case SDLK_LEFT:
+				funcPointer = &draw3;
+				break;
+			  case SDLK_RIGHT:
+				funcPointer = &draw4;
+				break;
 			}
 		  break;
 		}
