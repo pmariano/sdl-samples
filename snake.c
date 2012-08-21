@@ -17,14 +17,16 @@ int num_tail_img = 1;
 int orientation = 4;
 int vel = 2;
 int pieces_qtd = 1;
-SDL_Rect pieces[1000] = {};
+SDL_Rect pieces[50000] = {};
 
 void move(){
-	int j;
+	int j ;
 
-	for(j = 0; j <= pieces_qtd - 1;j++){
+	for(j = pieces_qtd-1; j >= 0;j--){
 	  SDL_Rect* piece = &pieces[j];
+
 	  if(j == 0){
+		printf("HEAD POS X: %i Y: %i \n", piece->x, piece->y);
 		switch(orientation){
 		  case UP:
 			piece->y -= vel;
@@ -41,9 +43,10 @@ void move(){
 		 }
 		SDL_BlitSurface(head_img, NULL, screen, piece);
 	  } else {
-		SDL_Rect nextpiece = pieces[j-1];
-		piece->x = nextpiece.x;
-		piece->y = nextpiece.y;
+		SDL_Rect before = pieces[j-1];
+		printf("BEFORE POS X: %i Y: %i \n", before.x, before.y);
+		piece->x = before.x;
+		piece->y = before.y;
 		SDL_BlitSurface(tail_img, NULL, screen, piece);
 	  }
 	}
@@ -52,8 +55,8 @@ void move(){
 void add_a_piece(){
 	int len = sizeof(pieces)/sizeof(SDL_Rect);
 
-	int x = pieces[pieces_qtd - 1].x + 15;
-	int y = pieces[pieces_qtd - 1].y + 15;
+	int x = pieces[pieces_qtd - 1].x;
+	int y = pieces[pieces_qtd - 1].y;
 
 	int j;
 	for(j = 0; j<5;j++){
