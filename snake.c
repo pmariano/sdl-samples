@@ -132,6 +132,7 @@ int main(int argc, char* argv[])
 	  Uint32 current_time = SDL_GetTicks();
 	  //arredondamento fail
 	  if((current_time - last_update) >= 1000/FPS){
+		SDL_Delay(1000/FPS);
 		SDL_FillRect(screen , NULL , 0x00000000);
 		move();
 		last_update = current_time;
