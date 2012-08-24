@@ -96,7 +96,6 @@ void handle_colision(){
 	int xdiff = abs(head.x - food.x);
 	int ydiff = abs(head.y - food.y);
 	if(xdiff <= 15 && ydiff <= 15){
-	  printf("RONALDOOOO");
 	  food_qtd--;
 	  add_piece();
 	}
